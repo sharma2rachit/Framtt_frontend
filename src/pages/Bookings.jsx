@@ -1,3 +1,4 @@
+// src/pages/Bookings.jsx
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabaseClient";
 
@@ -51,4 +52,5 @@ const Bookings = () => {
     </div>
   );
 };
+
 export default Bookings;

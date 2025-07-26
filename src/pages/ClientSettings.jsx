@@ -1,3 +1,4 @@
+// src/pages/ClientSettings.jsx
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 
@@ -40,4 +41,5 @@ const ClientSettings = () => {
     </div>
   );
 };
+
 export default ClientSettings;
