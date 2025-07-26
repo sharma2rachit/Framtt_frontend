@@ -1,5 +1,4 @@
-// src/App.jsx
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from './pages/Dashboard';
 
 function App() {
@@ -7,10 +6,12 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/dashboard" element={<Dashboard />} />
-        {/* Optional: add more routes here */}
+        {/* Redirect / to /dashboard */}
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        {/* Optionally, a catch-all "not found" page: */}
+        {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
     </BrowserRouter>
   );
 }
-
 export default App;
