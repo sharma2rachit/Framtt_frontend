@@ -1,31 +1,43 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '../lib/supabaseClient'; // adjust path if needed
+import { supabase } from '../lib/supabaseClient';
+
+function getClientIdFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("clientId") || "";
+}
 
 const ClientSettings = () => {
-  const [clientId, setClientId] = useState("");
+  const [client, setClient] = useState(null);
+  const [error, setError] = useState('');
+  const clientId = getClientIdFromURL();
 
   useEffect(() => {
-    async function fetchClientData() {
-      const email = "client@example.com"; // 🔄 Replace with actual logic
-      const { data } = await supabase
+    if (!clientId) return;
+    async function fetchClient() {
+      const { data, error } = await supabase
         .from("clients")
-        .select("client_id")
-        .eq("email", email)
+        .select("*")
+        .eq("client_id", clientId)
         .single();
-
-      if (data) setClientId(data.client_id);
+      if (data) setClient(data);
+      if (error) setError(error.message);
     }
-    fetchClientData();
-  }, []);
+    fetchClient();
+  }, [clientId]);
 
-  const snippet = `<script src="https://framtt-backend.onrender.com/snippet/${clientId}.js"></script>`;
+  const snippet = clientId
+    ? `<script src="https://framtt-backend.onrender.com/snippet/${clientId}.js"></script>`
+    : '';
 
   return (
     <div>
       <h2>Your Integration Snippet</h2>
-      {clientId ? <textarea rows={5} cols={70} value={snippet} readOnly /> : <p>Loading snippet…</p>}
+      <p><b>Your Client ID:</b> {clientId || "Not found (check URL)"}</p>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      {client ? (
+        <textarea rows={3} cols={70} value={snippet} readOnly />
+      ) : !error && <p>Loading snippet…</p>}
     </div>
   );
 };
-
 export default ClientSettings;
